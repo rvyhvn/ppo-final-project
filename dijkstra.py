@@ -1,6 +1,6 @@
 from tabulate import tabulate
 
-class Djikstra:
+class Dijkstra:
     def __init__(self, graph):
         self.graph = graph
         self.distance = {}
@@ -77,7 +77,7 @@ graph = {
     'D': {}
 }
 
-dijkstra = Djikstra(graph)
+dijkstra = Dijkstra(graph)
 dijkstra.route('A', 'D')
 print(dijkstra.distance)  # Shortest distances from 'A' to all nodes
 print(dijkstra.path)      # Shortest path from 'A' to 'D'

@@ -1,9 +1,10 @@
 import numpy as np
+import copy
 
 def f(x, y):
-    return ((2 - x) ** 2) + (200 * (y - x ** 2) ** 2)
+    return ((2-x)**2 + 10*(y**2-x)**2)
 
-class Pso:
+class PsoXy:
     def __init__(self, x, y, v, r, c, w):
         self.x = x
         self.y = y
@@ -45,7 +46,7 @@ class Pso:
     def iter(self, n):
         print(f"Iterasi 0")
         print(f"x = {self.x}")
-        print(f"v = {self.v}")
+        print(f"v = {self.vx}")
 
         for i in range(n):
             print(f"Iterasi ke: {i+1}")
@@ -54,4 +55,12 @@ class Pso:
             self.update_v()
             self.update_x()
             print(f"x = {self.x}")
-            print(f"v = {self.v}")
+            print(f"y = {self.y}")
+            print(f"vx = {self.vx}")
+            print(f"vy = {self.vy}")
+            print(f"x_p_best = {self.x_p_best}")
+            print(f"y_p_best = {self.y_p_best}")
+            print(f"x_g_best = {self.x_g_best}")
+            print(f"y_g_best = {self.y_g_best}")
+            print(f"f(x, y) = {[f(x, y) for x, y in zip(self.x, self.y)]}")
+
