@@ -70,15 +70,4 @@ class Dijkstra:
         print("\nShortest Path:")
         print(tabulate(path_table, headers="firstrow", tablefmt="grid"))
 
-graph = {
-    'A': {'B': 4, 'C': 3},
-    'B': {'D': 7},
-    'C': {'D': 1},
-    'D': {}
-}
 
-dijkstra = Dijkstra(graph)
-dijkstra.route('A', 'D')
-print(dijkstra.distance)  # Shortest distances from 'A' to all nodes
-print(dijkstra.path)      # Shortest path from 'A' to 'D'
-print(dijkstra.display_result())

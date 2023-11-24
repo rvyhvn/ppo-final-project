@@ -15,6 +15,7 @@ class PsoX:
         self.old_x = x.copy()
         self.x_p_best = self.x.copy()
         self.x_g_best = self.x[np.argmin([f(x) for x in self.x])]
+        self.f_values = [f(x_i) for x_i in self.x]  # Menyimpan nilai f(x) untuk setiap x
 
     def find_p_best(self):
         for i in range(len(self.x)):
@@ -23,7 +24,7 @@ class PsoX:
                 self.x_p_best[i] = self.x[i]
 
     def find_g_best(self):
-        self.x_g_best = self.x[np.argmin([f(x) for x in self.x])]
+        self.x_g_best = self.x[np.argmin(self.f_values)]
 
     def update_v(self):
         for i in range(len(self.x)):
@@ -33,22 +34,24 @@ class PsoX:
     def update_x(self):
         for i in range(len(self.x)):
             self.x[i] += self.vx[i]
+            self.f_values[i] = f(self.x[i])  # Mengupdate nilai f(x) setelah pembaruan x
 
     def iter(self, n):
         print("Iterasi 0")
         print(f"x = {self.x}")
         print(f"v = {self.vx}")
-
+        print(f"f(x) = {self.f_values}")
+        print()
         for i in range(n):
             print(f"Iterasi ke: {i+1}")
+            print("======================")
             self.find_p_best()
             self.find_g_best()
             self.update_v()
             self.update_x()
             print(f"x = {[round(val, 3) for val in self.x]}")
             print(f"v = {[round(val, 3) for val in self.vx]}")
+            print(f"f(x) = {[round(val, 3) for val in f_values_iter]}")  # Tampilkan nilai f(x) yang dihitung pada iterasi ini
             print(f"x_p_best = {[round(val, 3) for val in self.x_p_best]}")
             print(f"x_g_best = {round(self.x_g_best, 3)}")
-            print(f"f(x) = {[round(f(val), 3) for val in self.x]}")
-
-
+            print()
