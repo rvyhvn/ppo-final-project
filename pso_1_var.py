@@ -1,57 +1,59 @@
-import numpy as np
+import math
 
-# Fungsi yang ingin dioptimalkan
 def f(x):
-    return (x**4 - 16 * x**2 + 5 * x) / 2
+    return (math.pow(x, 4) - 16 * math.pow(x, 2) + 5 * x) / 2
 
-class PsoX:
-    def __init__(self, x, v, r, c, w):
-        self.x = x
-        self.vx = v.copy()
-        self.r = r
-        self.c = c
-        self.w = w
+class PSO:
+    def __init__(self, x_vals, v_vals, c_vals, r_vals, w_val):
+        self.x = x_vals
+        self.v = v_vals
+        self.c = c_vals
+        self.r = r_vals
+        self.w = w_val
+        self.oldX = self.x.copy()
+        self.pBest = self.x.copy()
+        self.gBest = 0.0
 
-        self.old_x = x.copy()
-        self.x_p_best = self.x.copy()
-        self.x_g_best = self.x[np.argmin([f(x) for x in self.x])]
-        self.f_values = [f(x_i) for x_i in self.x]
-
-    def find_p_best(self):
+    def findPBest(self):
         for i in range(len(self.x)):
-            val = f(self.x[i])
-            if val < f(self.x_p_best[i]):
-                self.x_p_best[i] = self.x[i]
+            if f(self.x[i]) < f(self.pBest[i]):
+                self.pBest[i] = self.x[i]
+            else:
+                self.pBest[i] = self.oldX[i]
 
-    def find_g_best(self):
-        self.x_g_best = self.x[np.argmin(self.f_values)]
+    def findGBest(self):
+        minVal = f(self.x[0])
+        minIndex = 0
+        for i in range(1, len(self.x)):
+            fx = f(self.x[i])
+            if fx < minVal:
+                minVal = fx
+                minIndex = i
+        self.gBest = self.x[minIndex]
 
-    def update_v(self):
+    def updateV(self):
         for i in range(len(self.x)):
-            r1, r2 = np.random.rand(), np.random.rand()
-            self.vx[i] = self.w * self.vx[i] + self.c[0] * r1 * (self.x_p_best[i] - self.x[i]) + self.c[1] * r2 * (self.x_g_best - self.x[i])
+            self.v[i] = (self.w * self.v[i]) + (self.c[0] * self.r[0] * (self.pBest[i] - self.x[i])) + (self.c[1] * self.r[1] * (self.gBest - self.x[i]))
 
-    def update_x(self):
+    def updateX(self):
         for i in range(len(self.x)):
-            self.x[i] += self.vx[i]
-            self.f_values[i] = f(self.x[i])
+            self.oldX[i] = self.x[i]
+            self.x[i] += self.v[i]
 
     def iter(self, n):
         print("Inisialisasi")
-        print(f"x = {self.x}")
-        print(f"v = {self.vx}")
-        # print(f"f(x) = {self.f_values}")
-        print()
+        print("x =", self.x)
+        print("v =", self.v, "\n")
         for i in range(n):
-            print(f"Iterasi ke: {i+1}")
-            print("======================")
-            self.find_p_best()
-            self.find_g_best()
-            self.update_v()
-            self.update_x()
-            print(f"x = {[round(val, 3) for val in self.x]}")
-            print(f"v = {[round(val, 3) for val in self.vx]}")
-            print(f"f(x) = {[round(val, 3) for val in self.f_values]}")
-            print(f"x_p_best = {[round(val, 3) for val in self.x_p_best]}")
-            print(f"x_g_best = {round(self.x_g_best, 3)}")
-            print()
+            print("Iterasi ke-", i + 1)
+            print("x =", self.x)
+            print("v =", self.v)
+            print("f(x) =", [f(val) for val in self.x])
+            print("pBest =", self.pBest)
+            print("gBest =", self.gBest, "\n")
+            self.findPBest()
+            self.findGBest()
+            self.updateV()
+            self.updateX()
+            print("Updated x =", self.x)
+            print("Updated v =", self.v, "\n")
