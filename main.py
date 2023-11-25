@@ -33,14 +33,14 @@ pso_1_var.iter(3)
 
 # PSO NOMOR 1
 # b.
-array_x0 = [random.randint(1, 50) for i in range(10)]
-v = [0, 0, 0]
+array_x0 = [random.randint(-5, 5) for i in range(10)]
 c = [0.5, 1]
 w = 1
 
 for i in range(len(array_x0)):
-    print("Perulangan ke-", i + 1)
     x0 = array_x0[i]
+    v = [0, 0, 0]
+    print("Perulangan ke-", i + 1, "dengan nilai x0 =", x0)
     r1 = random.random()
     r2 = random.random()
     r = [r1, r2]
