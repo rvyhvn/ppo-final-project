@@ -40,7 +40,7 @@ class PsoX:
         print("Iterasi 0")
         print(f"x = {self.x}")
         print(f"v = {self.vx}")
-        print(f"f(x) = {self.f_values}")
+        # print(f"f(x) = {self.f_values}")
         print()
         for i in range(n):
             print(f"Iterasi ke: {i+1}")
@@ -51,7 +51,7 @@ class PsoX:
             self.update_x()
             print(f"x = {[round(val, 3) for val in self.x]}")
             print(f"v = {[round(val, 3) for val in self.vx]}")
-            print(f"f(x) = {[round(val, 3) for val in f_values_iter]}")  # Tampilkan nilai f(x) yang dihitung pada iterasi ini
+            print(f"f(x) = {[round(val, 3) for val in self.f_values]}")
             print(f"x_p_best = {[round(val, 3) for val in self.x_p_best]}")
             print(f"x_g_best = {round(self.x_g_best, 3)}")
             print()

@@ -15,7 +15,7 @@ dijkstra = Dijkstra(graph)
 dijkstra.route('A', 'D')
 print(dijkstra.distance)  # Shortest distances from 'A' to all nodes
 print(dijkstra.path)      # Shortest path from 'A' to 'D'
-print(dijkstra.display_result())
+# print(dijkstra.display_result())
 
 x_1_var = np.array([0, 1, 2])
 v_1_var = np.array([0, 0, 0])
