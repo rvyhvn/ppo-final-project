@@ -15,7 +15,7 @@ class PsoX:
         self.old_x = x.copy()
         self.x_p_best = self.x.copy()
         self.x_g_best = self.x[np.argmin([f(x) for x in self.x])]
-        self.f_values = [f(x_i) for x_i in self.x]  # Menyimpan nilai f(x) untuk setiap x
+        self.f_values = [f(x_i) for x_i in self.x]
 
     def find_p_best(self):
         for i in range(len(self.x)):
@@ -34,10 +34,10 @@ class PsoX:
     def update_x(self):
         for i in range(len(self.x)):
             self.x[i] += self.vx[i]
-            self.f_values[i] = f(self.x[i])  # Mengupdate nilai f(x) setelah pembaruan x
+            self.f_values[i] = f(self.x[i])
 
     def iter(self, n):
-        print("Iterasi 0")
+        print("Inisialisasi")
         print(f"x = {self.x}")
         print(f"v = {self.vx}")
         # print(f"f(x) = {self.f_values}")
