@@ -1,66 +1,72 @@
-import numpy as np
-import copy
+import math
 
 def f(x, y):
-    return ((2-x)**2 + 10*(y**2-x)**2)
+    return (math.pow(x, 4) - 16 * math.pow(x, 2) + 5 * x + math.pow(y, 4) - 16 * math.pow(y, 2) + 5 * y) / 2
 
-class PsoXy:
-    def __init__(self, x, y, v, r, c, w):
-        self.x = x
-        self.y = y
-        self.vx = v.copy()
-        self.vy = v.copy()
-        self.r = r
-        self.c = c
-        self.w = w
+class PsoTwoVar:
+    def __init__(self, x_vals, y_vals, v_vals, c_vals, r_vals, w_val):
+        self.x = x_vals
+        self.y = y_vals
+        self.v = v_vals
+        self.c = c_vals
+        self.r = r_vals
+        self.w = w_val
+        self.oldX = self.x.copy()
+        self.oldY = self.y.copy()
+        self.pBest = self.x.copy()
+        self.pBestY = self.y.copy()
+        self.gBest = 0.0
 
-        self.old_x = x.copy()
-        self.old_y = y.copy()
-        self.x_p_best = self.x.copy()
-        self.y_p_best = self.y.copy()
-        self.x_g_best = self.x[np.argmin([f(x, y) for x, y in zip(self.x, self.y)])]
-        self.y_g_best = self.y[np.argmin([f(x, y) for x, y in zip(self.x, self.y)])]
-
-    def find_p_best(self):
+    def findPBest(self):
         for i in range(len(self.x)):
-            val = f(self.x[i], self.y[i])
-            if val < f(self.x_p_best[i], self.y_p_best[i]):
-                self.x_p_best[i] = self.x[i]
-                self.y_p_best[i] = self.y[i]
+            if f(self.x[i], self.y[i]) < f(self.pBest[i], self.pBestY[i]):
+                self.pBest[i] = self.x[i]
+                self.pBestY[i] = self.y[i]
+            else:
+                self.pBest[i] = self.oldX[i]
+                self.pBestY[i] = self.oldY[i]
 
-    def find_g_best(self):
-        self.x_g_best = self.x[np.argmin([f(x, y) for x, y in zip(self.x, self.y)])]
-        self.y_g_best = self.y[np.argmin([f(x, y) for x, y in zip(self.x, self.y)])]
+    def findGBest(self):
+        minVal = f(self.x[0], self.y[0])
+        minIndex = 0
+        for i in range(1, len(self.x)):
+            fx = f(self.x[i], self.y[i])
+            if fx < minVal:
+                minVal = fx
+                minIndex = i
+        self.gBest = self.x[minIndex]
+        self.gBestY = self.y[minIndex]
 
-    def update_v(self):
+    def updateV(self):
         for i in range(len(self.x)):
-            r1, r2 = np.random.rand(), np.random.rand()
-            self.vx[i] = self.w * self.vx[i] + self.c[0] * r1 * (self.x_p_best[i] - self.x[i]) + self.c[1] * r2 * (self.x_g_best - self.x[i])
-            self.vy[i] = self.w * self.vy[i] + self.c[0] * r1 * (self.y_p_best[i] - self.y[i]) + self.c[1] * r2 * (self.y_g_best - self.y[i])
+            self.v[i] = (self.w * self.v[i]) + (self.c[0] * self.r[0] * (self.pBest[i] - self.x[i])) + (self.c[1] * self.r[1] * (self.gBest - self.x[i])) + (self.c[2] * self.r[2] * (self.gBestY - self.y[i]))
 
-    def update_x(self):
+    def updateX(self):
         for i in range(len(self.x)):
-            self.x[i] += self.vx[i]
-            self.y[i] += self.vy[i]
+            self.oldX[i] = self.x[i]
+            self.oldY[i] = self.y[i]
+            self.x[i] += self.v[i]
+            self.y[i] += self.v[i]
 
     def iter(self, n):
-        print(f"Iterasi 0")
-        print(f"x = {self.x}")
-        print(f"v = {self.vx}")
-
+        print("Inisialisasi")
+        print("x =", self.x)
+        print("y =", self.y)
+        print("v =", self.v, "\n")
         for i in range(n):
-            print(f"Iterasi ke: {i+1}")
-            self.find_p_best()
-            self.find_g_best()
-            self.update_v()
-            self.update_x()
-            print(f"x = {self.x}")
-            print(f"y = {self.y}")
-            print(f"vx = {self.vx}")
-            print(f"vy = {self.vy}")
-            print(f"x_p_best = {self.x_p_best}")
-            print(f"y_p_best = {self.y_p_best}")
-            print(f"x_g_best = {self.x_g_best}")
-            print(f"y_g_best = {self.y_g_best}")
-            print(f"f(x, y) = {[f(x, y) for x, y in zip(self.x, self.y)]}")
-
+            print("Iterasi ke-", i + 1)
+            print("x =", self.x)
+            print("y =", self.y)
+            print("v =", self.v)
+            print("f(x, y) =", [f(self.x[j], self.y[j]) for j in range(len(self.x))])
+            self.findPBest()
+            self.findGBest()
+            print("pBest =", self.pBest)
+            print("pBestY =", self.pBestY)
+            print("gBest =", self.gBest)
+            print("gBestY =", self.gBestY, "\n")
+            self.updateV()
+            self.updateX()
+            print("Updated x =", self.x)
+            print("Updated y =", self.y)
+            print("Updated v =", self.v, "\n")

@@ -3,7 +3,7 @@ import math
 def f(x):
     return (math.pow(x, 4) - 16 * math.pow(x, 2) + 5 * x) / 2
 
-class PSO:
+class PsoOneVar:
     def __init__(self, x_vals, v_vals, c_vals, r_vals, w_val):
         self.x = x_vals
         self.v = v_vals
@@ -42,18 +42,18 @@ class PSO:
 
     def iter(self, n):
         print("Inisialisasi")
-        print("x =", self.x)
-        print("v =", self.v, "\n")
+        print("x =", [round(val, 3) for val in self.x])
+        print("v =", [round(val, 3) for val in self.v], "\n")
         for i in range(n):
             print("Iterasi ke-", i + 1)
-            print("x =", self.x)
-            print("v =", self.v)
-            print("f(x) =", [f(val) for val in self.x])
+            print("x =", [round(val, 3) for val in self.x])
+            print("v =", [round(val, 3) for val in self.v])
+            print("f(x) =", [round(f(val), 3) for val in self.x])
             self.findPBest()
             self.findGBest()
-            print("pBest =", self.pBest)
-            print("gBest =", self.gBest, "\n")
+            print("pBest =", [round(val, 3) for val in self.pBest])
+            print("gBest =", round(self.gBest, 3), "\n")
             self.updateV()
             self.updateX()
-            print("Updated x =", self.x)
-            print("Updated v =", self.v, "\n")
+            print("Updated x =", [round(val, 3) for val in self.x])
+            print("Updated v =", [round(val, 3) for val in self.v], "\n")
