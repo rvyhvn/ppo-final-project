@@ -7,19 +7,17 @@ class PsoTwoVar:
     def __init__(self, x_vals, y_vals, v_vals, c_vals, r_vals, w_val):
         self.x = x_vals
         self.y = y_vals
-        self.vx = v_vals  # vx untuk x
-        self.vy = v_vals  # vy untuk y
+        self.vx = v_vals
+        self.vy = v_vals
         self.c = c_vals
         self.r = r_vals
         self.w = w_val
         self.old_x = self.x.copy()
         self.old_y = self.y.copy()
-        self.p_best_x = self.x.copy()  # pBest untuk x
-        self.p_best_y = self.y.copy()  # pBest untuk y
-        self.g_best_x = 0.0  # gBest untuk x
-        self.g_best_y = 0.0  # gBest untuk y
-
-    # Metode lainnya tetap sama
+        self.p_best_x = self.x.copy()
+        self.p_best_y = self.y.copy()
+        self.g_best_x = 0.0
+        self.g_best_y = 0.0
 
     def find_p_best(self):
         for i in range(len(self.x)):
@@ -50,8 +48,8 @@ class PsoTwoVar:
         for i in range(len(self.x)):
             self.old_x[i] = self.x[i]
             self.old_y[i] = self.y[i]
-            self.x[i] += self.vx[i]  # Update x
-            self.y[i] += self.vy[i]  # Update y
+            self.x[i] += self.vx[i]
+            self.y[i] += self.vy[i]
 
     def iter(self, n):
         print("Inisialisasi")

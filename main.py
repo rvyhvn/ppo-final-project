@@ -64,3 +64,24 @@ w_2_var = 1
 
 pso_2_var = PsoTwoVar(x_2_var, y_2_var, v_2_var, c_2_var, r_2_var, w_2_var)
 pso_2_var.iter(3)
+
+# PSO NOMOR 2
+# b.
+
+array_x0_2_var = [random.randint(-10, 10) for i in range(10)]
+array_y0_2_var = [random.randint(-10, 10) for i in range(10)]
+
+c = [1, 0.5]
+w = 1
+
+for i in range(len(x_1_var)):
+    x0 = array_x0_2_var[i]
+    y0 = array_y0_2_var[i]
+    v = [0, 0, 0]
+    r1 = random.random()
+    r2 = random.random()
+    r = [r1, r2]
+    x = [x0, 1, 2]
+    y = [y0, 1, -1]
+    pso_2_var_x_y = PsoTwoVar(x, y, v, c, r, w)
+    pso.iter(3)
