@@ -46,6 +46,7 @@ class PsoOneVar:
         print("v =", [round(val, 3) for val in self.v], "\n")
         for i in range(n):
             print("Iterasi ke-", i + 1)
+            print("==================")
             print("x =", [round(val, 3) for val in self.x])
             print("v =", [round(val, 3) for val in self.v])
             print("f(x) =", [round(f(val), 3) for val in self.x])
