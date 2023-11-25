@@ -84,4 +84,4 @@ for i in range(len(x_1_var)):
     x = [x0, 1, 2]
     y = [y0, 1, -1]
     pso_2_var_x_y = PsoTwoVar(x, y, v, c, r, w)
-    pso.iter(3)
+    pso_2_var_x_y.iter(3)
