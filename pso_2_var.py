@@ -12,44 +12,44 @@ class PsoTwoVar:
         self.c = c_vals
         self.r = r_vals
         self.w = w_val
-        self.oldX = self.x.copy()
-        self.oldY = self.y.copy()
-        self.pBestX = self.x.copy()  # pBest untuk x
-        self.pBestY = self.y.copy()  # pBest untuk y
-        self.gBestX = 0.0  # gBest untuk x
-        self.gBestY = 0.0  # gBest untuk y
+        self.old_x = self.x.copy()
+        self.old_y = self.y.copy()
+        self.p_best_x = self.x.copy()  # pBest untuk x
+        self.p_best_y = self.y.copy()  # pBest untuk y
+        self.g_best_x = 0.0  # gBest untuk x
+        self.g_best_y = 0.0  # gBest untuk y
 
     # Metode lainnya tetap sama
 
-    def findPBest(self):
+    def find_p_best(self):
         for i in range(len(self.x)):
-            if f(self.x[i], self.y[i]) < f(self.pBestX[i], self.pBestY[i]):
-                self.pBestX[i] = self.x[i]
-                self.pBestY[i] = self.y[i]
+            if f(self.x[i], self.y[i]) < f(self.p_best_x[i], self.p_best_y[i]):
+                self.p_best_x[i] = self.x[i]
+                self.p_best_y[i] = self.y[i]
             else:
-                self.pBestX[i] = self.oldX[i]
-                self.pBestY[i] = self.oldY[i]
+                self.p_best_x[i] = self.old_x[i]
+                self.p_best_y[i] = self.old_y[i]
 
-    def findGBest(self):
-        minVal = f(self.x[0], self.y[0])
-        minIndex = 0
+    def find_g_best(self):
+        min_val = f(self.x[0], self.y[0])
+        min_index = 0
         for i in range(1, len(self.x)):
             fx = f(self.x[i], self.y[i])
-            if fx < minVal:
-                minVal = fx
-                minIndex = i
-        self.gBestX = self.x[minIndex]
-        self.gBestY = self.y[minIndex]
+            if fx < min_val:
+                min_val = fx
+                min_index = i
+        self.g_best_x = self.x[min_index]
+        self.g_best_y = self.y[min_index]
 
-    def updateV(self):
+    def update_v(self):
         for i in range(len(self.x)):
-            self.vx[i] = (self.w * self.vx[i]) + (self.c[0] * self.r[0] * (self.pBestX[i] - self.x[i])) + (self.c[1] * self.r[1] * (self.gBestX - self.x[i]))
-            self.vy[i] = (self.w * self.vy[i]) + (self.c[0] * self.r[0] * (self.pBestY[i] - self.y[i])) + (self.c[1] * self.r[1] * (self.gBestY - self.y[i]))
+            self.vx[i] = (self.w * self.vx[i]) + (self.c[0] * self.r[0] * (self.p_best_x[i] - self.x[i])) + (self.c[1] * self.r[1] * (self.g_best_x - self.x[i]))
+            self.vy[i] = (self.w * self.vy[i]) + (self.c[0] * self.r[0] * (self.p_best_y[i] - self.y[i])) + (self.c[1] * self.r[1] * (self.g_best_y - self.y[i]))
 
-    def updateXy(self):
+    def update_x_and_y(self):
         for i in range(len(self.x)):
-            self.oldX[i] = self.x[i]
-            self.oldY[i] = self.y[i]
+            self.old_x[i] = self.x[i]
+            self.old_y[i] = self.y[i]
             self.x[i] += self.vx[i]  # Update x
             self.y[i] += self.vy[i]  # Update y
 
@@ -67,14 +67,14 @@ class PsoTwoVar:
             print("vx =", self.vx)
             print("vy =", self.vy)
             print("f(x, y) =", [f(self.x[j], self.y[j]) for j in range(len(self.x))])
-            self.findPBest()
-            self.findGBest()
-            print("pBestX =", self.pBestX)
-            print("pBestY =", self.pBestY)
-            print("gBest =", self.gBestX)
-            print("gBestY =", self.gBestY, "\n")
-            self.updateV()
-            self.updateXy()
+            self.find_p_best()
+            self.find_g_best()
+            print("Personal Best X =", self.p_best_x)
+            print("Personal Best Y =", self.p_best_y)
+            print("Global Best X =", self.g_best_x)
+            print("Global Best Y =", self.g_best_y, "\n")
+            self.update_v()
+            self.update_x_and_y()
             print("Updated x =", self.x)
             print("Updated y =", self.y)
             print("Updated vx =", self.vx)
