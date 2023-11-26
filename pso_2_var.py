@@ -86,74 +86,74 @@ class PsoTwoVar:
             print("Updated vx =", [round(val, 3) for val in self.vx])
             print("Updated vy =", [round(val, 3) for val in self.vy], "\n")
 
-        def plot_iteration(self, n):
-            x_values = []
-            y_values = []
-            vx_values = []
-            vy_values = []
-            p_best_x_values = []
-            p_best_y_values = []
-            g_best_x_values = []
-            g_best_y_values = []
+    def plot_iteration(self, n):
+        x_values = []
+        y_values = []
+        vx_values = []
+        vy_values = []
+        p_best_x_values = []
+        p_best_y_values = []
+        g_best_x_values = []
+        g_best_y_values = []
 
-            for i in range(n):
-                x_values.append(self.x.copy())
-                y_values.append(self.y.copy())
-                vx_values.append(self.vx.copy())
-                vy_values.append(self.vy.copy())
-                p_best_x_values.append(self.p_best_x.copy())
-                p_best_y_values.append(self.p_best_y.copy())
-                g_best_x_values.append([self.g_best_x] * len(self.x))
-                g_best_y_values.append([self.g_best_y] * len(self.y))
+        for i in range(n):
+            x_values.append(self.x.copy())
+            y_values.append(self.y.copy())
+            vx_values.append(self.vx.copy())
+            vy_values.append(self.vy.copy())
+            p_best_x_values.append(self.p_best_x.copy())
+            p_best_y_values.append(self.p_best_y.copy())
+            g_best_x_values.append([self.g_best_x] * len(self.x))
+            g_best_y_values.append([self.g_best_y] * len(self.y))
 
-                self.find_p_best()
-                self.find_g_best()
-                self.update_v()
-                self.update_x_and_y()
+            self.find_p_best()
+            self.find_g_best()
+            self.update_v()
+            self.update_x_and_y()
 
-            iterations = list(range(1, n + 1))
+        iterations = list(range(1, n + 1))
 
-            fig, axs = plt.subplots(2, 4, figsize=(16, 8))
+        fig, axs = plt.subplots(2, 4, figsize=(16, 8))
 
-            axs[0, 0].plot(iterations, x_values)
-            axs[0, 0].set_title('x per Iterasi')
-            axs[0, 0].set_xlabel('Iterasi')
-            axs[0, 0].set_ylabel('Nilai x')
+        axs[0, 0].plot(iterations, x_values)
+        axs[0, 0].set_title('x per Iterasi')
+        axs[0, 0].set_xlabel('Iterasi')
+        axs[0, 0].set_ylabel('Nilai x')
 
-            axs[0, 1].plot(iterations, y_values)
-            axs[0, 1].set_title('y per Iterasi')
-            axs[0, 1].set_xlabel('Iterasi')
-            axs[0, 1].set_ylabel('Nilai y')
+        axs[0, 1].plot(iterations, y_values)
+        axs[0, 1].set_title('y per Iterasi')
+        axs[0, 1].set_xlabel('Iterasi')
+        axs[0, 1].set_ylabel('Nilai y')
 
-            axs[0, 2].plot(iterations, vx_values)
-            axs[0, 2].set_title('vx per Iterasi')
-            axs[0, 2].set_xlabel('Iterasi')
-            axs[0, 2].set_ylabel('Nilai vx')
+        axs[0, 2].plot(iterations, vx_values)
+        axs[0, 2].set_title('vx per Iterasi')
+        axs[0, 2].set_xlabel('Iterasi')
+        axs[0, 2].set_ylabel('Nilai vx')
 
-            axs[0, 3].plot(iterations, vy_values)
-            axs[0, 3].set_title('vy per Iterasi')
-            axs[0, 3].set_xlabel('Iterasi')
-            axs[0, 3].set_ylabel('Nilai vy')
+        axs[0, 3].plot(iterations, vy_values)
+        axs[0, 3].set_title('vy per Iterasi')
+        axs[0, 3].set_xlabel('Iterasi')
+        axs[0, 3].set_ylabel('Nilai vy')
 
-            axs[1, 0].plot(iterations, p_best_x_values)
-            axs[1, 0].set_title('Personal Best X per Iterasi')
-            axs[1, 0].set_xlabel('Iterasi')
-            axs[1, 0].set_ylabel('Nilai Personal Best X')
+        axs[1, 0].plot(iterations, p_best_x_values)
+        axs[1, 0].set_title('Personal Best X per Iterasi')
+        axs[1, 0].set_xlabel('Iterasi')
+        axs[1, 0].set_ylabel('Nilai Personal Best X')
 
-            axs[1, 1].plot(iterations, p_best_y_values)
-            axs[1, 1].set_title('Personal Best Y per Iterasi')
-            axs[1, 1].set_xlabel('Iterasi')
-            axs[1, 1].set_ylabel('Nilai Personal Best Y')
+        axs[1, 1].plot(iterations, p_best_y_values)
+        axs[1, 1].set_title('Personal Best Y per Iterasi')
+        axs[1, 1].set_xlabel('Iterasi')
+        axs[1, 1].set_ylabel('Nilai Personal Best Y')
 
-            axs[1, 2].plot(iterations, g_best_x_values)
-            axs[1, 2].set_title('Global Best X per Iterasi')
-            axs[1, 2].set_xlabel('Iterasi')
-            axs[1, 2].set_ylabel('Nilai Global Best X')
+        axs[1, 2].plot(iterations, g_best_x_values)
+        axs[1, 2].set_title('Global Best X per Iterasi')
+        axs[1, 2].set_xlabel('Iterasi')
+        axs[1, 2].set_ylabel('Nilai Global Best X')
 
-            axs[1, 3].plot(iterations, g_best_y_values)
-            axs[1, 3].set_title('Global Best Y per Iterasi')
-            axs[1, 3].set_xlabel('Iterasi')
-            axs[1, 3].set_ylabel('Nilai Global Best Y')
+        axs[1, 3].plot(iterations, g_best_y_values)
+        axs[1, 3].set_title('Global Best Y per Iterasi')
+        axs[1, 3].set_xlabel('Iterasi')
+        axs[1, 3].set_ylabel('Nilai Global Best Y')
 
-            plt.tight_layout()
-            plt.show()
+        plt.tight_layout()
+        plt.show()
