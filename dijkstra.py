@@ -1,5 +1,6 @@
 from tabulate import tabulate
 
+
 class Dijkstra:
     def __init__(self, graph):
         self.graph = graph
@@ -10,14 +11,14 @@ class Dijkstra:
 
     def initiate_distance(self, start, end):
         for node in self.graph:
-            self.distance[node] = float('inf')
+            self.distance[node] = float("inf")
         self.distance[start] = 0
         self.start = start
         self.end = end
 
     def find_shortest_path(self, notVisited):
         shortest_node = None
-        shortest_distance = float('inf')
+        shortest_distance = float("inf")
 
         for node in notVisited:
             if self.distance[node] < shortest_distance:
@@ -34,7 +35,7 @@ class Dijkstra:
         while notVisited:
             currentShortestNodeDistance = self.distance[shortestNode]
 
-            if currentShortestNodeDistance == float('inf'):
+            if currentShortestNodeDistance == float("inf"):
                 break
 
             for neighbor, weight in self.graph[shortestNode].items():
@@ -69,5 +70,3 @@ class Dijkstra:
         print(tabulate(distances_table, headers="firstrow", tablefmt="grid"))
         print("\nShortest Path:")
         print(tabulate(path_table, headers="firstrow", tablefmt="grid"))
-
-
