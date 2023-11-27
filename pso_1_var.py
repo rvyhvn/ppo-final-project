@@ -45,6 +45,11 @@ class PsoOneVar:
             self.x[i] += self.v[i]
 
     def iter(self, n):
+        x_values = []
+        v_values = []
+        fx_values = []
+        pbest_values = []
+        gbest_values = []
         print("Inisialisasi")
         print("x =", [round(val, 3) for val in self.x])
         print("v =", [round(val, 3) for val in self.v], "\n")
@@ -62,6 +67,12 @@ class PsoOneVar:
             self.update_x()
             print("Updated x =", [round(val, 3) for val in self.x])
             print("Updated v =", [round(val, 3) for val in self.v], "\n")
+            # Salin nilai x ke list baru agar tidak terhubung dengan self.x yang diupdate
+            x_values.append(self.x[:])
+            v_values.append(self.v[:])
+            fx_values.append([f(val) for val in self.x])
+            pbest_values.append(self.p_best[:])
+            gbest_values.append(self.g_best)
 
     def plot_iteration(self, n):
         x_values = []
@@ -82,26 +93,45 @@ class PsoOneVar:
 
         iterations = list(range(1, n + 1))
 
+        # You can extend this list for more particles
+        colors = ['blue', 'green', 'red', 'orange']
+
         fig, axs = plt.subplots(2, 2, figsize=(12, 8))
-        axs[0, 0].plot(iterations, x_values)
+
+        for i in range(len(x_values[0])):
+            axs[0, 0].plot(iterations, [x[i] for x in x_values],
+                           label=f'Particle {i}', color=colors[i])
+            axs[0, 1].plot(iterations, [v[i] for v in v_values],
+                           label=f'Velocity {i}', color=colors[i])
+
         axs[0, 0].set_title('x per Iterasi')
         axs[0, 0].set_xlabel('Iterasi')
         axs[0, 0].set_ylabel('Nilai x')
+        axs[0, 0].legend()
+        axs[0, 0].grid(True)
 
-        axs[0, 1].plot(iterations, v_values)
         axs[0, 1].set_title('v per Iterasi')
         axs[0, 1].set_xlabel('Iterasi')
         axs[0, 1].set_ylabel('Nilai v')
+        axs[0, 1].legend()
+        axs[0, 1].grid(True)
 
-        axs[1, 0].plot(iterations, p_best_values)
+        for i in range(len(p_best_values[0])):
+            axs[1, 0].plot(iterations, [p[i] for p in p_best_values],
+                           label=f'Particle {i} Personal Best', color=colors[i])
         axs[1, 0].set_title('Personal Best per Iterasi')
         axs[1, 0].set_xlabel('Iterasi')
         axs[1, 0].set_ylabel('Nilai Personal Best')
+        axs[1, 0].legend()
+        axs[1, 0].grid(True)
 
-        axs[1, 1].plot(iterations, g_best_values)
+        axs[1, 1].plot(iterations, g_best_values,
+                       label='Global Best', color='purple')
         axs[1, 1].set_title('Global Best per Iterasi')
         axs[1, 1].set_xlabel('Iterasi')
         axs[1, 1].set_ylabel('Nilai Global Best')
+        axs[1, 1].legend()
+        axs[1, 1].grid(True)
 
         plt.tight_layout()
         plt.show()

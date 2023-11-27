@@ -1,9 +1,8 @@
-import math
 import matplotlib.pyplot as plt
 
 
 def f(x, y):
-    return (math.pow(x, 4) - 16 * math.pow(x, 2) + 5 * x + math.pow(y, 4) - 16 * math.pow(y, 2) + 5 * y) / 2
+    return (2 - x) ** 2 + 10 * (y ** 2 - x) ** 2
 
 
 class PsoTwoVar:
@@ -58,33 +57,33 @@ class PsoTwoVar:
 
     def iter(self, n):
         print("Inisialisasi")
-        print("x =", [round(val, 3) for val in self.x])
-        print("y =", [round(val, 3) for val in self.y])
-        print("vx =", [round(val, 3) for val in self.vx])
-        print("vy =", [round(val, 3) for val in self.vy], "\n")
+        print("x =", [round(val, 5) for val in self.x])
+        print("y =", [round(val, 5) for val in self.y])
+        print("vx =", [round(val, 5) for val in self.vx])
+        print("vy =", [round(val, 5) for val in self.vy], "\n")
         for i in range(n):
             print("Iterasi ke-", i + 1)
             print("==================")
-            print("x =", [round(val, 3) for val in self.x])
-            print("y =", [round(val, 3) for val in self.y])
-            print("vx =", [round(val, 3) for val in self.vx])
-            print("vy =", [round(val, 3) for val in self.vy])
-            print("f(x, y) =", [round(f(self.x[j], self.y[j]), 3)
+            print("x =", [round(val, 5) for val in self.x])
+            print("y =", [round(val, 5) for val in self.y])
+            print("vx =", [round(val, 5) for val in self.vx])
+            print("vy =", [round(val, 5) for val in self.vy])
+            print("f(x, y) =", [round(f(self.x[j], self.y[j]), 5)
                   for j in range(len(self.x))])
             self.find_p_best()
             self.find_g_best()
-            print("Personal Best X =", [round(val, 3)
+            print("Personal Best X =", [round(val, 5)
                   for val in self.p_best_x])
-            print("Personal Best Y =", [round(val, 3)
+            print("Personal Best Y =", [round(val, 5)
                   for val in self.p_best_y])
-            print("Global Best X =", round(self.g_best_x, 3))
-            print("Global Best Y =", round(self.g_best_y, 3), "\n")
+            print("Global Best X =", round(self.g_best_x, 5))
+            print("Global Best Y =", round(self.g_best_y, 5), "\n")
             self.update_v()
             self.update_x_and_y()
-            print("Updated x =", [round(val, 3) for val in self.x])
-            print("Updated y =", [round(val, 3) for val in self.y])
-            print("Updated vx =", [round(val, 3) for val in self.vx])
-            print("Updated vy =", [round(val, 3) for val in self.vy], "\n")
+            print("Updated x =", [round(val, 5) for val in self.x])
+            print("Updated y =", [round(val, 5) for val in self.y])
+            print("Updated vx =", [round(val, 5) for val in self.vx])
+            print("Updated vy =", [round(val, 5) for val in self.vy], "\n")
 
     def plot_iteration(self, n):
         x_values = []
@@ -119,41 +118,57 @@ class PsoTwoVar:
         axs[0, 0].set_title('x per Iterasi')
         axs[0, 0].set_xlabel('Iterasi')
         axs[0, 0].set_ylabel('Nilai x')
+        # Menambah legenda
+        axs[0, 0].legend([f'Particle {j+1}' for j in range(len(x_values[0]))])
 
         axs[0, 1].plot(iterations, y_values)
         axs[0, 1].set_title('y per Iterasi')
         axs[0, 1].set_xlabel('Iterasi')
         axs[0, 1].set_ylabel('Nilai y')
+        # Menambah legenda
+        axs[0, 1].legend([f'Particle {j+1}' for j in range(len(y_values[0]))])
 
         axs[0, 2].plot(iterations, vx_values)
         axs[0, 2].set_title('vx per Iterasi')
         axs[0, 2].set_xlabel('Iterasi')
         axs[0, 2].set_ylabel('Nilai vx')
+        # Menambah legenda
+        axs[0, 2].legend([f'Particle {j+1}' for j in range(len(vx_values[0]))])
 
         axs[0, 3].plot(iterations, vy_values)
         axs[0, 3].set_title('vy per Iterasi')
         axs[0, 3].set_xlabel('Iterasi')
         axs[0, 3].set_ylabel('Nilai vy')
+        # Menambah legenda
+        axs[0, 3].legend([f'Particle {j+1}' for j in range(len(vy_values[0]))])
 
         axs[1, 0].plot(iterations, p_best_x_values)
         axs[1, 0].set_title('Personal Best X per Iterasi')
         axs[1, 0].set_xlabel('Iterasi')
         axs[1, 0].set_ylabel('Nilai Personal Best X')
+        # Menambah legenda
+        axs[1, 0].legend(
+            [f'Particle {j+1}' for j in range(len(p_best_x_values[0]))])
 
         axs[1, 1].plot(iterations, p_best_y_values)
         axs[1, 1].set_title('Personal Best Y per Iterasi')
         axs[1, 1].set_xlabel('Iterasi')
         axs[1, 1].set_ylabel('Nilai Personal Best Y')
+        # Menambah legenda
+        axs[1, 1].legend(
+            [f'Particle {j+1}' for j in range(len(p_best_y_values[0]))])
 
         axs[1, 2].plot(iterations, g_best_x_values)
         axs[1, 2].set_title('Global Best X per Iterasi')
         axs[1, 2].set_xlabel('Iterasi')
         axs[1, 2].set_ylabel('Nilai Global Best X')
+        axs[1, 2].legend(['Global Best'])  # Menambah legenda
 
         axs[1, 3].plot(iterations, g_best_y_values)
         axs[1, 3].set_title('Global Best Y per Iterasi')
         axs[1, 3].set_xlabel('Iterasi')
         axs[1, 3].set_ylabel('Nilai Global Best Y')
+        axs[1, 3].legend(['Global Best'])  # Menambah legenda
 
         plt.tight_layout()
         plt.show()
