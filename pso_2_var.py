@@ -94,6 +94,7 @@ class PsoTwoVar:
         p_best_y_values = []
         g_best_x_values = []
         g_best_y_values = []
+        fx_y_values = []  # Menyimpan nilai f(x, y)
 
         for i in range(n):
             x_values.append(self.x.copy())
@@ -104,6 +105,10 @@ class PsoTwoVar:
             p_best_y_values.append(self.p_best_y.copy())
             g_best_x_values.append([self.g_best_x] * len(self.x))
             g_best_y_values.append([self.g_best_y] * len(self.y))
+
+            # Menghitung f(x, y) pada setiap iterasi
+            fx_y_values.append([f(self.x[j], self.y[j])
+                               for j in range(len(self.x))])
 
             self.find_p_best()
             self.find_g_best()
@@ -118,57 +123,72 @@ class PsoTwoVar:
         axs[0, 0].set_title('x per Iterasi')
         axs[0, 0].set_xlabel('Iterasi')
         axs[0, 0].set_ylabel('Nilai x')
-        # Menambah legenda
         axs[0, 0].legend([f'Particle {j+1}' for j in range(len(x_values[0]))])
+        axs[0, 0].grid(True)
 
         axs[0, 1].plot(iterations, y_values)
         axs[0, 1].set_title('y per Iterasi')
         axs[0, 1].set_xlabel('Iterasi')
         axs[0, 1].set_ylabel('Nilai y')
-        # Menambah legenda
         axs[0, 1].legend([f'Particle {j+1}' for j in range(len(y_values[0]))])
+        axs[0, 1].grid(True)
 
         axs[0, 2].plot(iterations, vx_values)
         axs[0, 2].set_title('vx per Iterasi')
         axs[0, 2].set_xlabel('Iterasi')
         axs[0, 2].set_ylabel('Nilai vx')
-        # Menambah legenda
         axs[0, 2].legend([f'Particle {j+1}' for j in range(len(vx_values[0]))])
+        axs[0, 2].grid(True)
 
         axs[0, 3].plot(iterations, vy_values)
         axs[0, 3].set_title('vy per Iterasi')
         axs[0, 3].set_xlabel('Iterasi')
         axs[0, 3].set_ylabel('Nilai vy')
-        # Menambah legenda
         axs[0, 3].legend([f'Particle {j+1}' for j in range(len(vy_values[0]))])
+        axs[0, 3].grid(True)
 
         axs[1, 0].plot(iterations, p_best_x_values)
         axs[1, 0].set_title('Personal Best X per Iterasi')
         axs[1, 0].set_xlabel('Iterasi')
         axs[1, 0].set_ylabel('Nilai Personal Best X')
-        # Menambah legenda
         axs[1, 0].legend(
             [f'Particle {j+1}' for j in range(len(p_best_x_values[0]))])
-
+        axs[1, 0].grid(True)
         axs[1, 1].plot(iterations, p_best_y_values)
         axs[1, 1].set_title('Personal Best Y per Iterasi')
         axs[1, 1].set_xlabel('Iterasi')
         axs[1, 1].set_ylabel('Nilai Personal Best Y')
-        # Menambah legenda
         axs[1, 1].legend(
             [f'Particle {j+1}' for j in range(len(p_best_y_values[0]))])
+        axs[1, 1].grid(True)
 
         axs[1, 2].plot(iterations, g_best_x_values)
         axs[1, 2].set_title('Global Best X per Iterasi')
         axs[1, 2].set_xlabel('Iterasi')
         axs[1, 2].set_ylabel('Nilai Global Best X')
-        axs[1, 2].legend(['Global Best'])  # Menambah legenda
+        axs[1, 2].legend(['Global Best'])
+        axs[1, 2].grid(True)
 
         axs[1, 3].plot(iterations, g_best_y_values)
         axs[1, 3].set_title('Global Best Y per Iterasi')
         axs[1, 3].set_xlabel('Iterasi')
         axs[1, 3].set_ylabel('Nilai Global Best Y')
-        axs[1, 3].legend(['Global Best'])  # Menambah legenda
+        axs[1, 3].legend(['Global Best'])
+        axs[1, 3].grid(True)
+
+        plt.tight_layout()
+        plt.show()
+
+        fig, ax_fxy = plt.subplots(figsize=(8, 6))
+        for i in range(len(fx_y_values[0])):
+            ax_fxy.plot(iterations, [fx[i] for fx in fx_y_values],
+                        label=f'f(x, y) Particle {i+1}')
+
+        ax_fxy.set_title('f(x, y) per Iterasi')
+        ax_fxy.set_xlabel('Iterasi')
+        ax_fxy.set_ylabel('Nilai f(x, y)')
+        ax_fxy.legend()
+        ax_fxy.grid(True)
 
         plt.tight_layout()
         plt.show()

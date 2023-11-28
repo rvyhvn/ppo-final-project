@@ -79,12 +79,16 @@ class PsoOneVar:
         v_values = []
         p_best_values = []
         g_best_values = []
+        fx_values = []  # Tambah list untuk menyimpan nilai f(x)
 
         for i in range(n):
             x_values.append(self.x.copy())
             v_values.append(self.v.copy())
             p_best_values.append(self.p_best.copy())
             g_best_values.append(self.g_best)
+
+            # Hitung f(x) pada setiap iterasi
+            fx_values.append([f(val) for val in self.x])
 
             self.find_p_best()
             self.find_g_best()
@@ -93,7 +97,7 @@ class PsoOneVar:
 
         iterations = list(range(1, n + 1))
 
-        # You can extend this list for more particles
+        # Anda dapat extend list colors untuk lebih banyak partikel jika dibutuhkan
         colors = ['blue', 'green', 'red', 'orange']
 
         fig, axs = plt.subplots(2, 2, figsize=(12, 8))
@@ -132,6 +136,18 @@ class PsoOneVar:
         axs[1, 1].set_ylabel('Nilai Global Best')
         axs[1, 1].legend()
         axs[1, 1].grid(True)
+
+        # Plot f(x) per iterasi pada subplot terpisah
+        fig, ax = plt.subplots(figsize=(8, 6))
+        for i in range(len(fx_values[0])):
+            ax.plot(iterations, [fx[i] for fx in fx_values],
+                    label=f'f(x) Particle {i}', color=colors[i])
+
+        ax.set_title('f(x) per Iterasi')
+        ax.set_xlabel('Iterasi')
+        ax.set_ylabel('Nilai f(x)')
+        ax.legend()
+        ax.grid(True)
 
         plt.tight_layout()
         plt.show()
