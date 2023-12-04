@@ -1,4 +1,6 @@
 from tabulate import tabulate
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 class Dijkstra:
@@ -26,6 +28,23 @@ class Dijkstra:
                 shortest_distance = self.distance[node]
 
         return shortest_node
+
+    def visualize_graph(self):
+        G = nx.DiGraph()
+        G.add_nodes_from(self.graph.keys())
+
+        for node, neighbors in self.graph.items():
+            for neighbor, weight in neighbors.items():
+                G.add_edge(node, neighbor, weight=weight)
+
+        pos = nx.spring_layout(G)
+        labels = nx.get_edge_attributes(G, 'weight')
+
+        nx.draw(G, pos, with_labels=True, node_size=500,
+                node_color='skyblue', font_weight='bold')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+        plt.title("Graph Visualization")
+        plt.show()
 
     def route(self, start, end):
         self.initiate_distance(start, end)
@@ -55,18 +74,24 @@ class Dijkstra:
                 i += 1
 
             pathList.reverse()
-            print(" -> ".join(pathList))
+            print("Shortest Path:", " -> ".join(pathList))
+
+        self.visualize_graph()
 
     def display_result(self):
-        distances_table = [["Node", "Shortest Distance from Start"]]
-        for node, dist in self.distance.items():
-            distances_table.append([node, dist])
+        # Prepare the headers for the table
+        nodes = list(self.graph.keys())
+        edges_table = [[""] + nodes]  # Header row
 
-        path_table = [["Node", "Predecessor Node"]]
-        for node, pred in self.path.items():
-            path_table.append([node, pred])
+        # Fill the edges table with weights
+        for node in nodes:
+            row = [node]
+            for neighbor in nodes:
+                if neighbor in self.graph[node]:
+                    row.append(self.graph[node][neighbor])
+                else:
+                    row.append("-")  # No edge between nodes
+            edges_table.append(row)
 
-        print("Shortest Distances:")
-        print(tabulate(distances_table, headers="firstrow", tablefmt="grid"))
-        print("\nShortest Path:")
-        print(tabulate(path_table, headers="firstrow", tablefmt="grid"))
+        print("Edges with Weights:")
+        print(tabulate(edges_table, headers="firstrow", tablefmt="grid"))

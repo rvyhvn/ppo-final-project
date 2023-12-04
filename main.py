@@ -1,6 +1,24 @@
 from pso_1_var import PsoOneVar
 from pso_2_var import PsoTwoVar
+from dijkstra import Dijkstra
 import random
+
+
+def run_dijkstra():
+    graph = {
+        'V1': {'V2': 4, 'V3': 6, 'V4': 2},
+        'V2': {'V3': 3, 'V5': 3},
+        'V3': {'V6': 2, 'V7': 1},
+        'V4': {'V3': 2, 'V7': 5},
+        'V5': {'V6': 2, 'V8': 3},
+        'V6': {'V8': 3},
+        'V7': {'V8': 3},
+        'V8': {}
+    }
+
+    dijkstra = Dijkstra(graph)
+    dijkstra.route('V1', 'V8')
+    dijkstra.display_result()
 
 
 def run_pso_1_var_a():
@@ -67,7 +85,8 @@ def run_pso_2_var_b():
         pso_2_var_x_y.plot_iteration(25)
 
 
-run_pso_1_var_a()
+run_dijkstra()
+# run_pso_1_var_a()
 # run_pso_1_var_b()
 # run_pso_2_var_a()
 # run_pso_2_var_b()
