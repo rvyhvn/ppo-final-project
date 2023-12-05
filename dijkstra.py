@@ -40,7 +40,22 @@ class Dijkstra:
         pos = nx.spring_layout(G)
         labels = nx.get_edge_attributes(G, 'weight')
 
-        nx.draw(G, pos, with_labels=True, node_size=500,
+        edge_colors = ['black' for _ in G.edges()]
+
+        if self.distance[self.end] < float("inf"):
+            pathList = [self.end]
+            i = 0
+            while self.start not in pathList:
+                pathList.append(self.path[pathList[i]])
+                i += 1
+
+            pathList.reverse()
+
+            for i in range(len(pathList) - 1):
+                if G.has_edge(pathList[i], pathList[i+1]):
+                    edge_colors[list(G.edges()).index((pathList[i], pathList[i+1]))] = 'red'
+
+        nx.draw(G, pos, with_labels=True, node_size=500, edge_color=edge_colors,
                 node_color='skyblue', font_weight='bold')
         nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
         plt.title("Graph Visualization")
@@ -95,3 +110,24 @@ class Dijkstra:
 
         print("Edges with Weights:")
         print(tabulate(edges_table, headers="firstrow", tablefmt="grid"))
+
+graph = {
+    'V1': {'V2': 4, 'V3': 6, 'V4': 2},
+    'V2': {'V3': 3, 'V5': 3},
+    'V3': {'V6': 2, 'V7': 1},
+    'V4': {'V3': 2, 'V7': 5},
+    'V5': {'V6': 2, 'V8': 3},
+    'V6': {'V8': 3},
+    'V7': {'V8': 3},
+    'V8': {},
+}
+
+# Buat objek dari kelas Dijkstra
+dijkstra = Dijkstra(graph)
+
+# Tentukan titik awal dan titik akhir untuk pencarian lintasan terpendek
+start_point = 'V1'
+end_point = 'V8'
+
+# Cari lintasan terpendek dari titik awal ke titik akhir
+dijkstra.route(start_point, end_point)
