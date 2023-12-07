@@ -8,6 +8,7 @@ class Dijkstra:
         self.graph = graph
         self.distance = {}
         self.path = {}
+        self.visited = set()
         self.start = ""
         self.end = ""
 
@@ -53,7 +54,8 @@ class Dijkstra:
 
             for i in range(len(pathList) - 1):
                 if G.has_edge(pathList[i], pathList[i+1]):
-                    edge_colors[list(G.edges()).index((pathList[i], pathList[i+1]))] = 'red'
+                    edge_colors[list(G.edges()).index(
+                        (pathList[i], pathList[i+1]))] = 'red'
 
         nx.draw(G, pos, with_labels=True, node_size=500, edge_color=edge_colors,
                 node_color='skyblue', font_weight='bold')
@@ -78,6 +80,7 @@ class Dijkstra:
                     self.distance[neighbor] = distance_to_neighbor
                     self.path[neighbor] = shortestNode
 
+            self.visited.add(shortestNode)  # Tandai node yang telah dikunjungi
             notVisited.remove(shortestNode)
             shortestNode = self.find_shortest_path(notVisited)
 
@@ -90,7 +93,7 @@ class Dijkstra:
 
             pathList.reverse()
             print("Shortest Path:", " -> ".join(pathList))
-
+        self.display_all_shortest_paths()
         self.visualize_graph()
 
     def display_result(self):
@@ -111,23 +114,44 @@ class Dijkstra:
         print("Edges with Weights:")
         print(tabulate(edges_table, headers="firstrow", tablefmt="grid"))
 
-graph = {
-    'V1': {'V2': 4, 'V3': 6, 'V4': 2},
-    'V2': {'V3': 3, 'V5': 3},
-    'V3': {'V6': 2, 'V7': 1},
-    'V4': {'V3': 2, 'V7': 5},
-    'V5': {'V6': 2, 'V8': 3},
-    'V6': {'V8': 3},
-    'V7': {'V8': 3},
-    'V8': {},
-}
+    def find_all_paths(self, start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return [path]
+        if start not in self.graph:
+            return []
+        paths = []
+        for node in self.graph[start]:
+            if node not in path:
+                new_paths = self.find_all_paths(node, end, path)
+                for new_path in new_paths:
+                    paths.append(new_path)
+        return paths
 
-# Buat objek dari kelas Dijkstra
-dijkstra = Dijkstra(graph)
-
-# Tentukan titik awal dan titik akhir untuk pencarian lintasan terpendek
-start_point = 'V1'
-end_point = 'V8'
-
-# Cari lintasan terpendek dari titik awal ke titik akhir
-dijkstra.route(start_point, end_point)
+    def display_all_shortest_paths(self):
+        all_paths = self.find_all_paths(self.start, self.end)
+        print("All Shortest Paths:")
+        for idx, path in enumerate(all_paths):
+            if len(path) > 1:
+                print(f"Path {idx + 1}: {' -> '.join(path)}")
+# graph = {
+#     'V1': {'V2': 4, 'V3': 6, 'V4': 2},
+#     'V2': {'V3': 3, 'V5': 3},
+#     'V3': {'V6': 2, 'V7': 1},
+#     'V4': {'V3': 2, 'V7': 5},
+#     'V5': {'V6': 2, 'V8': 3},
+#     'V6': {'V8': 3},
+#     'V7': {'V8': 3},
+#     'V8': {},
+# }
+#
+# # Buat objek dari kelas Dijkstra
+# dijkstra = Dijkstra(graph)
+#
+# # Tentukan titik awal dan titik akhir untuk pencarian lintasan terpendek
+# start_point = 'V1'
+# end_point = 'V8'
+#
+# # Cari lintasan terpendek dari titik awal ke titik akhir
+# dijkstra.route(start_point, end_point)
+#
