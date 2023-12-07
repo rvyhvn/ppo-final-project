@@ -130,6 +130,42 @@ class Dijkstra:
 
         self.visualize_graph()
 
+    def route_all_nodes(self, start):
+        # Menambahkan print nilai titik awal
+        print("\nStarting Point:", start)
+        
+        # Inisialisasi jarak dan path
+        self.initiate_distance(start, "")
+        notVisited = [node for node in self.distance]
+        shortestNode = self.find_shortest_path(notVisited)
+
+        # Dapatkan lintasan terpendek ke semua node
+        while notVisited:
+            currentShortestNodeDistance = self.distance[shortestNode]
+
+            if currentShortestNodeDistance == float("inf"):
+                break
+
+            for neighbor, weight in self.graph[shortestNode].items():
+                distance_to_neighbor = currentShortestNodeDistance + weight
+                if distance_to_neighbor < self.distance[neighbor]:
+                    self.distance[neighbor] = distance_to_neighbor
+                    self.path[neighbor] = shortestNode
+
+            notVisited.remove(shortestNode)
+            shortestNode = self.find_shortest_path(notVisited)
+
+        # Print lintasan terpendek ke semua node
+        for node in self.distance:
+            if self.distance[node] < float("inf"):
+                pathList = [node]
+                i = 0
+                while start not in pathList:
+                    pathList.append(self.path[pathList[i]])
+                    i += 1
+                pathList.reverse()
+                print(f"Shortest Path to {node}:", " -> ".join(pathList))
+
     def display_result(self):
         # Persiapkan header untuk tabel
         nodes = list(self.graph.keys())
@@ -172,3 +208,6 @@ end_point = 'V8'
 
 # Cari lintasan terpendek dari titik awal ke titik akhir
 dijkstra.route(start_point, end_point)
+
+# Mencari lintasan terpendek dari 'V1' ke semua node lainnya
+dijkstra.route_all_nodes(start_point)
