@@ -4,6 +4,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # Definisikan kelas Dijkstra
+
+
 class Dijkstra:
     def __init__(self, graph):
         # Inisialisasi atribut kelas
@@ -33,6 +35,78 @@ class Dijkstra:
 
         return shortest_node
 
+    def find_all_paths(self, node, visited, path):
+        visited[node] = True
+        path.append(node)
+
+        if node == self.end:
+            self.all_paths.append(list(path))
+        else:
+            for neighbor in self.graph[node]:
+                if not visited[neighbor]:
+                    self.find_all_paths(neighbor, visited, path)
+
+        path.pop()
+        visited[node] = False
+
+    def find_alternative_paths(self):
+        self.all_paths = []
+        visited = {node: False for node in self.graph}
+        self.find_all_paths(self.start, visited, [])
+
+        alternative_paths = []
+        for path in self.all_paths:
+            if len(path) == len(set(path)):  # Ensure no repeated nodes in the path
+                distance = sum(self.graph[path[i]][path[i + 1]]
+                               for i in range(len(path) - 1))
+                alternative_paths.append((path, distance))
+
+        # Sort paths by distance in ascending order
+        alternative_paths.sort(key=lambda x: x[1])
+
+        return alternative_paths
+
+    def route_with_alternatives(self, start, end):
+        # Find shortest path
+        self.initiate_distance(start, end)
+        not_visited = [node for node in self.distance]
+        shortest_node = self.find_shortest_path(not_visited)
+
+        while not_visited:
+            current_shortest_node_distance = self.distance[shortest_node]
+
+            if current_shortest_node_distance == float("inf"):
+                break
+
+            for neighbor, weight in self.graph[shortest_node].items():
+                distance_to_neighbor = current_shortest_node_distance + weight
+                if distance_to_neighbor < self.distance[neighbor]:
+                    self.distance[neighbor] = distance_to_neighbor
+                    self.path[neighbor] = shortest_node
+
+            not_visited.remove(shortest_node)
+            shortest_node = self.find_shortest_path(not_visited)
+
+        # Print shortest path
+        if self.distance[end] < float("inf"):
+            path_list = [end]
+            i = 0
+            while start not in path_list:
+                path_list.append(self.path[path_list[i]])
+                i += 1
+            path_list.reverse()
+            print("Shortest Path:", " -> ".join(path_list),
+                  f"Distance: {self.distance[end]}")
+
+        # Find alternative paths
+        alternative_paths = self.find_alternative_paths()
+
+        # Print alternative paths
+        if alternative_paths:
+            print("\nAlternative Paths:")
+            for alt_path, distance in alternative_paths:
+                print(" -> ".join(alt_path), f"Distance: {distance}")
+
     def visualize_graph(self):
         # Buat objek graph menggunakan NetworkX
         G = nx.DiGraph()
@@ -55,14 +129,15 @@ class Dijkstra:
             'V8': (4, 0),
         }
 
-        pos = custom_positions  
+        pos = custom_positions
         labels = nx.get_edge_attributes(G, 'weight')
 
         # Tentukan warna masing-masing node
-        node_colors = ['#d3d3d3', '#ffffe0', '#90ee90', '#9370db', '#d3d3d3', '#d3d3d3', '#ffffe0', '#FFB6C1']
-        
+        node_colors = ['#d3d3d3', '#ffffe0', '#90ee90',
+                       '#9370db', '#d3d3d3', '#d3d3d3', '#ffffe0', '#FFB6C1']
+
         # Tentukan ukuran node
-        node_sizes = [1500 for _ in G.nodes()]  
+        node_sizes = [1500 for _ in G.nodes()]
 
         # Tentukan warna tepi (edge color) node
         node_edge_colors = ['black' for _ in G.nodes()]
@@ -82,7 +157,8 @@ class Dijkstra:
 
             for i in range(len(pathList) - 1):
                 if G.has_edge(pathList[i], pathList[i+1]):
-                    edge_colors[list(G.edges()).index((pathList[i], pathList[i+1]))] = 'red'
+                    edge_colors[list(G.edges()).index(
+                        (pathList[i], pathList[i+1]))] = 'red'
 
         # Visualisasi graph menggunakan Matplotlib
         nx.draw(G, pos, with_labels=True, node_size=node_sizes, edge_color=edge_colors,
@@ -95,7 +171,7 @@ class Dijkstra:
         # Menambahkan print nilai titik awal dan titik akhir
         print("Starting Point:", start)
         print("End Point:", end)
-        
+
         # Inisialisasi jarak dan path
         self.initiate_distance(start, end)
         notVisited = [node for node in self.distance]
@@ -133,7 +209,7 @@ class Dijkstra:
     def route_all_nodes(self, start):
         # Menambahkan print nilai titik awal
         print("\nStarting Point:", start)
-        
+
         # Inisialisasi jarak dan path
         self.initiate_distance(start, "")
         notVisited = [node for node in self.distance]
@@ -185,6 +261,7 @@ class Dijkstra:
         print("Edges with Weights:")
         print(tabulate(edges_table, headers="firstrow", tablefmt="grid"))
 
+
 print("Dijkstra_Kelompok 4 & 7_PPO B")
 
 # Definisikan node v dan jaraknya
@@ -205,9 +282,10 @@ dijkstra = Dijkstra(graph)
 # Tentukan titik awal dan titik akhir untuk pencarian lintasan terpendek
 start_point = 'V1'
 end_point = 'V8'
-
+print("Starting Point: ", start_point)
+print("End Point: ", end_point)
 # Cari lintasan terpendek dari titik awal ke titik akhir
-dijkstra.route(start_point, end_point)
+dijkstra.route_with_alternatives(start_point, end_point)
 
 # Mencari lintasan terpendek dari 'V1' ke semua node lainnya
 dijkstra.route_all_nodes(start_point)
